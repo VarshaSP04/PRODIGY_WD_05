@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+<div class="card">
+    <div class="search">
+        <input type="text" placeholder="Enter City Name" spellcheck="false">
+        <button><img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Ios-search.svg" width="30px" height="20px"></button>
+    </div>
+    <div class="error">
+        <p>Invalid city name</p>
+    </div>
+    <div class="weather" 
+    style="text-align: center;">
+        <div class="weather-icon">
+        <img src="images/ra.webp" width="180px" height="260px">
+    </div>
+        <h1 class="temperature">22°c</h1>
+        <h2 class="city">bengaluru</h2>
+        <div class="details">
+            <div class="col">
+                <img src="https://static.vecteezy.com/system/resources/previews/011/652/634/non_2x/humidity-3d-render-icon-illustration-png.png" width="350px" height="100px">
+            <div>
+            <p class="humidity">50%</p>
+            <p>Humidity</p>
+        </div>
+    </div>
+    <div class="col">
+        <img src="https://static.vecteezy.com/system/resources/previews/024/825/155/non_2x/3d-weather-icon-sun-and-wind-free-png.png" width="150px" height="150px">
+    <div>
+    <p class="Wind">15 km/h</p>
+    <p>Wind Speed</p>
+</div>
+</div>
+</div>
+    </div>
+    </div>
+
+<script>
+
+const apiKey = "2f2f28897e21e83ddfe82b82d717c56a";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon =document.querySelector(".weather-icon img");
+async function checkWeather(city){
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+    if(response.status == 404){
+        document.querySelector(".error").style.display = "block";
+        document.querySelector(".weather").style.display = "none";
+    }else{
+        var data = await response.json();
+
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temperature").innerHTML = Math.round(data.main.temp) + "°c";
+    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    document.querySelector(".Wind").innerHTML = data.wind.speed + " km/h";
+
+    if(data.weather[0].main =="Clouds"){
+        weatherIcon.src ="https://cdn3.iconfinder.com/data/icons/luchesa-vol-9/128/Weather-512.png";
+    }
+    else if(data.weather[0].main =="Clear"){
+        weatherIcon.src ="https://cdn2.iconfinder.com/data/icons/weather-682/1024/sun_sunny-512.png";
+    }
+    else if(data.weather[0].main =="Rain"){
+        weatherIcon.src ="https://static.vecteezy.com/system/resources/thumbnails/010/989/526/small_2x/rainy-weather-3d-rendering-isolated-on-transparent-background-ui-ux-icon-design-web-and-app-trend-png.png";
+    }
+    else if(data.weather[0].main =="Drizzle"){
+        weatherIcon.src ="https://cdn3d.iconscout.com/3d/premium/thumb/sunny-drizzle-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-day-rain-rainy-pack-nature-icons-5122311.png";
+    }
+    else if(data.weather[0].main =="Mist"){
+        weatherIcon.src ="https://img.freepik.com/free-psd/silver-snowflake-winter-holiday-crystal-ice-design-frost-frozen-cold-weather-season_632498-56821.jpg?w=360";
+    }
+
+    document.querySelector(".weather").style.display ="block";
+    document.querySelector(".error").style.display = "none";
+}
+
+
+}
+
+searchBtn.addEventListener("click", ()=>{
+    checkWeather(searchBox.value);
+})
+
+
+</script>
+
+    </body>
+</html>
